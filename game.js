@@ -332,7 +332,7 @@ function worldPlaneMaterial(path) {
 const imageMaterials = {
   trashBag: worldPlaneMaterial("assets/obstacles/trash_bag.webp"),
   bicycle: worldPlaneMaterial("assets/obstacles/bicycle.webp"),
-  star: worldPlaneMaterial("assets/collectibles/crystal.png"),
+  star: worldPlaneMaterial("assets/collectibles/crystal.webp"),
   life: worldPlaneMaterial("assets/collectibles/extra_life.webp"),
 };
 
