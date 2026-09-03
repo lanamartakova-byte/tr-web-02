@@ -16,9 +16,9 @@ body { display: grid; place-items: center; background: #07172b; }
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(ellipse at 18% 17%, rgba(255, 255, 255, .68) 0 3%, transparent 7%),
-    radial-gradient(ellipse at 78% 12%, rgba(255, 255, 255, .52) 0 4%, transparent 9%),
-    linear-gradient(#55b4ee 0%, #9ad8f5 54%, #d7e8eb 100%);
+    radial-gradient(ellipse at 20% 19%, rgba(218, 220, 241, .18) 0 3%, transparent 8%),
+    radial-gradient(ellipse at 77% 14%, rgba(233, 213, 231, .14) 0 4%, transparent 10%),
+    linear-gradient(#18375f 0%, #3f5681 48%, #746b91 76%, #a493ad 100%);
   outline: none;
 }
 
@@ -213,6 +213,27 @@ body { display: grid; place-items: center; background: #07172b; }
 .art-hitbox { position: absolute; padding: 0; border: 0; outline: 0; background: transparent; color: transparent; cursor: pointer; }
 .rules-screen-view { position: absolute; inset: 0; display: grid; place-items: center; }
 .rules-screen-view[hidden] { display: none; }
+.rules-screen-view .start-art-shell {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  place-items: center;
+  aspect-ratio: auto;
+}
+.rules-screen-view .start-art-shell > img {
+  display: block;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  max-width: calc(min(100vw, 177.7778vh) - 2rem);
+  max-height: calc(min(100vh, 56.25vw) - 6rem);
+  object-fit: contain;
+  object-position: center;
+}
 .rules-back-button { position: absolute; z-index: 2; top: 2%; left: 1.2%; padding: .55em .75em; color: white; background: rgba(4, 16, 33, .86); border: 1px solid rgba(100, 234, 255, .45); border-radius: .55em; font: inherit; font-size: clamp(10px, .8vw, 14px); font-weight: 900; cursor: pointer; }
 .primary-action {
   padding: .7em 1.8em !important;

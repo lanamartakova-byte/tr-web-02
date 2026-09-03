@@ -23,14 +23,14 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x8ccbf0, 65, 245);
+scene.fog = new THREE.Fog(0x716f91, 65, 245);
 
 const camera = new THREE.PerspectiveCamera(48, 16 / 9, 0.1, 300);
 camera.position.set(0, CONFIG.cameraHeight, CONFIG.cameraZ);
 camera.lookAt(0, 0.35, -38);
 
-scene.add(new THREE.HemisphereLight(0xdaf4ff, 0x18202b, 2.1));
-const sun = new THREE.DirectionalLight(0xffffff, 1.4);
+scene.add(new THREE.HemisphereLight(0x9bb9e5, 0x202536, 2.05));
+const sun = new THREE.DirectionalLight(0xffd9bb, 1.35);
 sun.position.set(-8, 14, 4);
 scene.add(sun);
 
@@ -64,9 +64,12 @@ function facadeTexture({ wall, window, frame, ground, columns, rows }) {
       const y = row * cellH + cellH * 0.2;
       context.fillStyle = frame;
       context.fillRect(x - 2, y - 2, cellW * 0.56 + 4, cellH * 0.5 + 4);
-      context.fillStyle = window;
+      const windowPattern = (row * 11 + column * 7 + columns * 3 + rows) % 10;
+      context.fillStyle = windowPattern < 6
+        ? ["#ffd27a", "#f6b95f", "#ffe19a"][windowPattern % 3]
+        : window;
       context.fillRect(x, y, cellW * 0.56, cellH * 0.5);
-      context.fillStyle = "rgba(255,255,255,.24)";
+      context.fillStyle = windowPattern < 6 ? "rgba(255,248,205,.38)" : "rgba(190,210,230,.18)";
       context.fillRect(x + 2, y + 2, cellW * 0.16, cellH * 0.08);
     }
   }
@@ -88,16 +91,16 @@ function buildingVariant(settings, hazy = false) {
 }
 
 const buildingMaterials = [
-  { wall: "#789bb0", window: "#244d67", frame: "#d6e4e9", ground: "#405764", roof: 0x526d7d, cornice: 0xb6c9d0, columns: 4, rows: 7 },
-  { wall: "#b28f79", window: "#31566d", frame: "#e1d5c9", ground: "#5e514c", roof: 0x765f53, cornice: 0xd4bca9, columns: 3, rows: 8 },
-  { wall: "#6f879d", window: "#203f57", frame: "#b9cbd7", ground: "#374957", roof: 0x495d70, cornice: 0x94adbc, columns: 5, rows: 6 },
-  { wall: "#9ca58e", window: "#38596b", frame: "#e0e4d9", ground: "#52594f", roof: 0x69705f, cornice: 0xc8cdbf, columns: 4, rows: 8 },
-  { wall: "#8c829d", window: "#294b62", frame: "#d9d2e1", ground: "#4c4655", roof: 0x625a70, cornice: 0xbab0c7, columns: 3, rows: 6 },
+  { wall: "#536b82", window: "#182f46", frame: "#91a4b8", ground: "#303d50", roof: 0x394b61, cornice: 0x7c8fa4, columns: 4, rows: 7 },
+  { wall: "#766677", window: "#20364f", frame: "#a399a8", ground: "#433b4d", roof: 0x51465a, cornice: 0x98889a, columns: 3, rows: 8 },
+  { wall: "#4b5d78", window: "#162a42", frame: "#8494aa", ground: "#293548", roof: 0x344258, cornice: 0x6e8199, columns: 5, rows: 6 },
+  { wall: "#626978", window: "#24394e", frame: "#9da1ac", ground: "#3b404c", roof: 0x484d5d, cornice: 0x898e9c, columns: 4, rows: 8 },
+  { wall: "#625a76", window: "#1c3048", frame: "#9992aa", ground: "#3b3549", roof: 0x453f58, cornice: 0x898096, columns: 3, rows: 6 },
 ].map(settings => buildingVariant(settings));
 const farBuildingMaterials = [
-  { wall: "#9fb8c6", window: "#7394a8", frame: "#c9d9df", ground: "#829eac", roof: 0x8faab8, cornice: 0xb7ccd4, columns: 4, rows: 7 },
-  { wall: "#aabdc5", window: "#7997a7", frame: "#d5e0e3", ground: "#8ca3ad", roof: 0x91a7b0, cornice: 0xc5d4d9, columns: 3, rows: 8 },
-  { wall: "#91adbe", window: "#698ca1", frame: "#c2d4dc", ground: "#7895a5", roof: 0x809dac, cornice: 0xafc5cf, columns: 5, rows: 6 },
+  { wall: "#69778e", window: "#46556e", frame: "#8792a6", ground: "#566178", roof: 0x5d697f, cornice: 0x7d889d, columns: 4, rows: 7 },
+  { wall: "#716f87", window: "#4a526a", frame: "#918fa3", ground: "#5b5a70", roof: 0x626176, cornice: 0x858499, columns: 3, rows: 8 },
+  { wall: "#606f89", window: "#404f6b", frame: "#818da5", ground: "#4e5b73", roof: 0x55627a, cornice: 0x758199, columns: 5, rows: 6 },
 ].map(settings => buildingVariant(settings, true));
 
 const textureLoader = new THREE.TextureLoader();
@@ -329,7 +332,7 @@ function worldPlaneMaterial(path) {
 const imageMaterials = {
   trashBag: worldPlaneMaterial("assets/obstacles/trash_bag.webp"),
   bicycle: worldPlaneMaterial("assets/obstacles/bicycle.webp"),
-  star: worldPlaneMaterial("assets/collectibles/star.webp"),
+  star: worldPlaneMaterial("assets/collectibles/crystal.png"),
   life: worldPlaneMaterial("assets/collectibles/extra_life.webp"),
 };
 
@@ -584,21 +587,21 @@ function spawnExtraLife(lane = balancedLane(gameplayFlow.heartLaneCounts), z = G
 }
 
 const GAME_1_QUESTIONS = [
-  { sentence: "Look! Emma ___ for the bus.", correct: "IS WAITING", distractors: ["WAITS", "WAIT"] },
-  { sentence: "My dad usually ___ coffee in the morning.", correct: "DRINKS", distractors: ["IS DRINKING", "DRINK"] },
-  { sentence: "Listen! Someone ___ the piano.", correct: "IS PLAYING", distractors: ["PLAYS", "PLAY"] },
-  { sentence: "We ___ English on Mondays.", correct: "STUDY", distractors: ["ARE STUDYING", "STUDIES"] },
-  { sentence: "Ben ___ his room at the moment.", correct: "IS CLEANING", distractors: ["CLEANS", "CLEAN"] },
-  { sentence: "Sarah ___ to work by car. She always rides her bike.", correct: "DOESN'T GO", distractors: ["ISN'T GOING", "DON'T GO"] },
-  { sentence: "Shh! The baby ___.", correct: "IS SLEEPING", distractors: ["SLEEPS", "SLEEP"] },
-  { sentence: "___ you usually ___ breakfast at home?", correct: "DO / HAVE", distractors: ["ARE / HAVING", "DOES / HAVE"] },
-  { sentence: "Look at Tom! He ___ in the rain.", correct: "IS DANCING", distractors: ["DANCES", "DANCE"] },
-  { sentence: "My brother ___ breakfast. He isn't hungry in the morning.", correct: "DOESN'T EAT", distractors: ["ISN'T EATING", "DON'T EAT"] },
-  { sentence: "Why ___ you ___?", correct: "ARE / LAUGHING", distractors: ["DO / LAUGH", "IS / LAUGHING"] },
-  { sentence: "Kate ___ her grandparents every weekend.", correct: "VISITS", distractors: ["IS VISITING", "VISIT"] },
-  { sentence: "I ___ TV right now. I'm doing my homework.", correct: "AM NOT WATCHING", distractors: ["DON'T WATCH", "DOESN'T WATCH"] },
-  { sentence: "___ your train usually ___ at 8:30?", correct: "DOES / LEAVE", distractors: ["DO / LEAVE", "IS / LEAVING"] },
-  { sentence: "___ the children ___ across the street now?", correct: "ARE / RUNNING", distractors: ["DO / RUN", "IS / RUNNING"] },
+  { sentence: "I ___ this film three times.", correct: "have seen", distractors: ["saw", "see"] },
+  { sentence: "We ___ to Italy last summer.", correct: "went", distractors: ["have gone", "go"] },
+  { sentence: "Mia ___ her homework yet.", correct: "hasn't finished", distractors: ["didn't finish", "doesn't finish"] },
+  { sentence: "___ you ever ___ a horse?", correct: "Have / ridden", distractors: ["Did / ride", "Have / rode"] },
+  { sentence: "Tom ___ me yesterday.", correct: "called", distractors: ["has called", "calls"] },
+  { sentence: "I ___ that new café yet.", correct: "haven't tried", distractors: ["didn't try", "don't try"] },
+  { sentence: "___ Sarah ___ you last night?", correct: "Did / text", distractors: ["Has / texted", "Did / texted"] },
+  { sentence: "My parents ___ Paris several times.", correct: "have visited", distractors: ["visited", "have visit"] },
+  { sentence: "I've ___ finished my homework.", correct: "just", distractors: ["yesterday", "last night"] },
+  { sentence: "We saw that film ___.", correct: "last week", distractors: ["yet", "ever"] },
+  { sentence: "Have you finished your project ___?", correct: "yet", distractors: ["two days ago", "last Monday"] },
+  { sentence: "I haven't spoken to Emma ___ Monday.", correct: "since", distractors: ["ago", "yesterday"] },
+  { sentence: "Did you see Jack ___?", correct: "yesterday", distractors: ["ever", "yet"] },
+  { sentence: "She has ___ been abroad.", correct: "never", distractors: ["last year", "ago"] },
+  { sentence: "He hasn't called me ___.", correct: "yet", distractors: ["last night", "two days ago"] },
 ];
 
 const questionState = {
@@ -697,7 +700,8 @@ function spawnGateGroup() {
   ]);
   questionState.attemptId += 1;
   questionState.activeAttempt = { id: questionState.attemptId, resolved: false };
-  questionProgress.textContent = `NOW OR USUALLY? · ${questionState.index + 1}/15`;
+  const taskType = questionState.index < 8 ? "CHOOSE THE CORRECT FORM" : "CHOOSE THE TIME MARKER";
+  questionProgress.textContent = `PAST OR EXPERIENCE? · ${taskType} · ${questionState.index + 1}/15`;
   questionText.textContent = question.sentence;
   questionPanel.hidden = false;
   options.forEach((option, lane) => addEntity({
@@ -822,7 +826,7 @@ class AudioManager {
     this.sfxVolume = saved.sfxVolume;
     this.muted = saved.muted;
     this.unavailable = new Set();
-    this.music = new Audio("assets/sounds/music_game1.mp3");
+    this.music = new Audio("assets/sounds/music_game2.mp3");
     this.music.loop = true;
     this.music.preload = "none";
     this.music.volume = this.muted ? 0 : this.musicVolume * MUSIC_MASTER_MULTIPLIER;
@@ -844,7 +848,7 @@ class AudioManager {
   }
 
   loadSettings() {
-    const defaults = { musicVolume: 0.10, sfxVolume: 0.20, muted: false };
+    const defaults = { musicVolume: 0.12, sfxVolume: 0.30, muted: false };
     try {
       const saved = JSON.parse(localStorage.getItem("tenseRushAudioSettingsV3"));
       if (!saved) return defaults;

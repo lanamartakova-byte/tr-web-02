@@ -12,7 +12,7 @@
         <canvas id="world" aria-hidden="true"></canvas>
         <div class="game-hud">
           <div class="hud-stat"><small>SCORE</small><b id="score">0</b></div>
-          <div class="hud-stat"><small>STARS</small><b id="stars">0</b></div>
+          <div class="hud-stat"><small>CRYSTALS</small><b id="stars">0</b></div>
           <div class="hud-lives">
             <small>LIVES</small>
             <div id="life-slots" class="life-slots" aria-label="5 of 5 lives">
@@ -29,16 +29,16 @@
           <button id="mute-button" class="mute-button" type="button" aria-pressed="false" aria-label="Mute all sound">🔊</button>
           <label>
             <span>MUSIC</span>
-            <input id="music-volume" type="range" min="0" max="100" value="10" aria-label="Music volume" />
+            <input id="music-volume" type="range" min="0" max="100" value="12" aria-label="Music volume" />
           </label>
           <label>
             <span>EFFECTS</span>
-            <input id="effects-volume" type="range" min="0" max="100" value="20" aria-label="Effects volume" />
+            <input id="effects-volume" type="range" min="0" max="100" value="30" aria-label="Effects volume" />
           </label>
         </div>
         <button id="pause-button" class="pause-button" type="button" aria-label="Pause game" hidden>Ⅱ</button>
         <div id="question-panel" class="question-panel" hidden>
-          <small id="question-progress">NOW OR USUALLY? · 1/15</small>
+          <small id="question-progress">PAST OR EXPERIENCE? · CHOOSE THE CORRECT FORM · 1/15</small>
           <strong id="question-text"></strong>
         </div>
         <div id="event-message" class="event-message" aria-live="polite"></div>
@@ -49,8 +49,8 @@
             <button id="restart-button" type="button">RESTART</button>
             <button id="home-button" type="button">HOME</button>
             <div class="pause-audio">
-              <label><span>MUSIC</span><input id="pause-music-volume" type="range" min="0" max="100" value="10" /></label>
-              <label><span>EFFECTS</span><input id="pause-effects-volume" type="range" min="0" max="100" value="20" /></label>
+              <label><span>MUSIC</span><input id="pause-music-volume" type="range" min="0" max="100" value="12" /></label>
+              <label><span>EFFECTS</span><input id="pause-effects-volume" type="range" min="0" max="100" value="30" /></label>
               <button id="pause-mute-button" type="button" aria-pressed="false">🔊 SOUND ON</button>
             </div>
           </section>
@@ -63,13 +63,13 @@
         </div>
         <div id="start-overlay" class="state-overlay start-overlay">
           <div id="title-screen-view" class="start-art-shell">
-            <img id="title-screen-image" src="assets/ui/start/title_screen.webp" alt="Tense Rush — Present Simple vs Present Continuous" />
+            <img id="title-screen-image" src="assets/ui/start/title_screen_02.png" alt="Tense Rush — Present Simple vs Present Continuous" />
             <button id="play-button" class="art-hitbox start-hitbox" type="button" aria-label="Start Tense Rush"></button>
             <button id="rules-button" class="art-hitbox rules-hitbox" type="button" aria-label="Open rules"></button>
           </div>
           <div id="rules-screen-view" class="rules-screen-view" hidden>
             <div class="start-art-shell">
-              <img src="assets/ui/start/ules_screen.webp" alt="Tense Rush rules" />
+              <img src="assets/ui/start/rules_screen_02.png" alt="Tense Rush rules" />
             </div>
             <button id="rules-back-button" class="rules-back-button" type="button">← BACK</button>
           </div>
@@ -80,7 +80,7 @@
             <p id="performance-message" class="performance-message">GREAT JOB!</p>
             <div class="results-grid">
               <span>SCORE</span><b id="result-score">0</b>
-              <span>STARS</span><b id="result-stars">0</b>
+              <span>CRYSTALS</span><b id="result-stars">0</b>
               <span>CORRECT</span><b id="result-correct">15 / 15</b>
               <span>MISTAKES</span><b id="result-mistakes">0</b>
               <span>LIVES LEFT</span><b id="result-lives">5 / 5</b>
