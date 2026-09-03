@@ -895,14 +895,6 @@ class AudioManager {
   unlock() {
     if (this.unlocked) return;
     this.unlocked = true;
-    for (const sound of Object.values(this.sfx)) {
-      const warmup = sound.cloneNode();
-      warmup.muted = true;
-      warmup.play().then(() => {
-        warmup.pause();
-        warmup.currentTime = 0;
-      }).catch(() => {});
-    }
     if (!this.unavailable.has("music")) this.music.play().catch(() => {});
   }
 
