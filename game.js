@@ -828,7 +828,7 @@ class AudioManager {
     this.unavailable = new Set();
     this.music = new Audio("assets/sounds/music_game2.mp3");
     this.music.loop = true;
-    this.music.preload = "none";
+    this.music.preload = "auto";
     this.music.volume = this.muted ? 0 : this.musicVolume * MUSIC_MASTER_MULTIPLIER;
     this.music.addEventListener("error", () => this.unavailable.add("music"), { once: true });
     this.sfx = Object.fromEntries(Object.entries({
@@ -839,11 +839,13 @@ class AudioManager {
       jump: "assets/sounds/jump.wav",
     }).map(([name, path]) => {
       const audio = new Audio(path);
-      audio.preload = "none";
+      audio.preload = "auto";
       audio.volume = this.sfxVolume * SFX_MASTER_MULTIPLIER;
       audio.addEventListener("error", () => this.unavailable.add(name), { once: true });
       return [name, audio];
     }));
+    this.music.load();
+    for (const sound of Object.values(this.sfx)) sound.load();
     this.unlocked = false;
   }
 
@@ -893,6 +895,14 @@ class AudioManager {
   unlock() {
     if (this.unlocked) return;
     this.unlocked = true;
+    for (const sound of Object.values(this.sfx)) {
+      const warmup = sound.cloneNode();
+      warmup.muted = true;
+      warmup.play().then(() => {
+        warmup.pause();
+        warmup.currentTime = 0;
+      }).catch(() => {});
+    }
     if (!this.unavailable.has("music")) this.music.play().catch(() => {});
   }
 
