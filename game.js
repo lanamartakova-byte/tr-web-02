@@ -6,6 +6,8 @@ const CONFIG = Object.freeze({
   segmentLength: 90,
   segmentCount: 3,
   speed: 30,
+  gateApproachSpeed: 17.25,
+  speedEase: 2.5,
   cameraHeight: 4.4,
   cameraZ: 8,
   playerRoadZ: -5,
@@ -727,6 +729,7 @@ const state = {
   correctAnswers: 0,
   wrongAnswers: 0,
   invulnerableUntil: 0,
+  forwardSpeed: CONFIG.speed,
   timers: { event: 0.35, gate: 10 },
 };
 
@@ -1000,9 +1003,16 @@ function updateLaneScreenPositions() {
 function updateRoad(dt) {
   const loopLength = CONFIG.segmentLength * CONFIG.segmentCount;
   for (const segment of roadSegments) {
-    segment.position.z += CONFIG.speed * dt;
+    segment.position.z += state.forwardSpeed * dt;
     if (segment.position.z > CONFIG.segmentLength) segment.position.z -= loopLength;
   }
+}
+
+function updateForwardSpeed(dt) {
+  const gateApproachActive = questionState.activeAttempt && !questionState.activeAttempt.resolved;
+  const targetSpeed = gateApproachActive ? CONFIG.gateApproachSpeed : CONFIG.speed;
+  state.forwardSpeed += (targetSpeed - state.forwardSpeed) * (1 - Math.exp(-dt * CONFIG.speedEase));
+  if (Math.abs(targetSpeed - state.forwardSpeed) < 0.01) state.forwardSpeed = targetSpeed;
 }
 
 function jumpHeight() {
@@ -1125,6 +1135,7 @@ function resetRun() {
   state.correctAnswers = 0;
   state.wrongAnswers = 0;
   state.invulnerableUntil = 0;
+  state.forwardSpeed = CONFIG.speed;
   state.timers.event = 0.35;
   state.timers.gate = 10;
   state.lastTime = performance.now();
@@ -1305,14 +1316,14 @@ function updateGameplay(dt, now) {
   }
   if (state.timers.gate <= 0 && !gatesActive && !questionState.feedbackUntil && !questionState.complete) {
     spawnGateGroup();
-    state.timers.gate = 15;
+    state.timers.gate = 22.5;
     state.timers.event = 0.05;
   }
 
   const collisionRange = 1.65;
   for (const entity of [...gameplayEntities]) {
     if (!gameplayEntities.includes(entity)) continue;
-    entity.group.position.z += CONFIG.speed * dt;
+    entity.group.position.z += state.forwardSpeed * dt;
     if (entity.kind === "star" || entity.kind === "life") {
       entity.group.position.y += Math.sin(now * 0.004 + entity.lane) * dt * 0.16;
     }
@@ -1420,6 +1431,7 @@ function frame(now) {
   const dt = Math.min((now - state.lastTime) / 1000, 0.05);
   state.lastTime = now;
   if (runtime.mode === "running") {
+    updateForwardSpeed(dt);
     updateRoad(dt);
     updatePlayer(dt);
     updateGameplay(dt, now);
